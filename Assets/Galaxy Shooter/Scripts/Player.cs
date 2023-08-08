@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private bool _canTripleShot = false;
 
-    public bool canTripleShot = false;
+    [SerializeField]
+    private float _speedBoost = 1.0f;
 
     [SerializeField]
     private GameObject _laserPrefab;
@@ -15,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fireRate = 0.25f;
 
+    [SerializeField]
     private float _canFire = 0.0f;
 
     [SerializeField]
@@ -44,7 +48,7 @@ public class Player : MonoBehaviour
         if (Time.time > _canFire)
         {
             _canFire = Time.time + _fireRate;
-            if(canTripleShot == true)
+            if (_canTripleShot == true)
             {
                 Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
             }
@@ -60,10 +64,8 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        transform.Translate(Vector3.right * _speed * horizontalInput * Time.deltaTime);
-        transform.Translate(Vector3.up * _speed * verticalInput * Time.deltaTime);
-
-
+        transform.Translate(Vector3.right * _speed * horizontalInput * _speedBoost * Time.deltaTime);
+        transform.Translate(Vector3.up * _speed * verticalInput * _speedBoost * Time.deltaTime);
 
         if (transform.position.y > 0)
         {
@@ -84,17 +86,31 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    //Triple shot Powerup 
     public void TripleShotPowerupOn()
     {
-        canTripleShot = true;
+        _canTripleShot = true;
         StartCoroutine(TripleShotPowerRoutine());
     }
 
     public IEnumerator TripleShotPowerRoutine()
     {
         yield return new WaitForSeconds(5.0f);
-        canTripleShot = false;
+        _canTripleShot = false;
+    }
 
+    //Speed Powerup 
+    public void SpeedBoostOn()
+    {
+        _speedBoost = 1.5f;
+        StartCoroutine(SpeedBoostRoutine());
+    }
+
+    public IEnumerator SpeedBoostRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _speedBoost = 1.0f;
     }
 
 }

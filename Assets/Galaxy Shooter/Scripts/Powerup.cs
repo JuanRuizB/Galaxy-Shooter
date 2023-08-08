@@ -7,6 +7,8 @@ public class Powerup : MonoBehaviour
 
     [SerializeField] private float _speed = 3.0f;
 
+    [SerializeField] private int _powerupID; // 0 = triple, 1 = speed, 2 = shield;
+
     // Update is called once per frame
     void Update()
     {
@@ -15,14 +17,26 @@ public class Powerup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
             //access the player
             Player player = other.GetComponent<Player>();
-            if(player != null)
+            if (player != null)
             {
-                //turn the triple shot bool to true
-                player.TripleShotPowerupOn();
+                //enable triple shot 
+                if (_powerupID == 0)
+                {
+                    player.TripleShotPowerupOn();
+                }
+                else if (_powerupID == 1) //enable speed 
+                {
+                    player.SpeedBoostOn();
+                }
+                else if (_powerupID == 2) //enable shield
+                {
+
+                }
+
             }
 
             //destroy our selves
