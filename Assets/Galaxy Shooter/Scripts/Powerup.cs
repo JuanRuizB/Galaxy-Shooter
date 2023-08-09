@@ -5,7 +5,7 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
 
-    [SerializeField] private float _speed = 3.0f;
+    [SerializeField] private float _speed = 2.0f;
 
     [SerializeField] private int _powerupID; // 0 = triple, 1 = speed, 2 = shield;
 
@@ -34,7 +34,7 @@ public class Powerup : MonoBehaviour
                 }
                 else if (_powerupID == 2) //enable shield
                 {
-
+                    player.ShieldPowerupOn();
                 }
 
             }
