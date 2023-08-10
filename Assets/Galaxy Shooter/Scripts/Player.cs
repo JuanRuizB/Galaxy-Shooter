@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
     private GameObject _shieldGameObject;
 
     [SerializeField]
+    private GameObject[] _engines;
+
+    [SerializeField]
     private float _fireRate = 0.25f;
 
     [SerializeField]
@@ -37,10 +40,9 @@ public class Player : MonoBehaviour
     private int _lifes = 3;
 
     private UIManager _uiManager;
-
     private GameManager _gameManager;
-
     private SpanwManager _spanwManager;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     private void Start()
@@ -61,6 +63,8 @@ public class Player : MonoBehaviour
         {
             _spanwManager.StartSpawnRoutines();
         }
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -84,6 +88,16 @@ public class Player : MonoBehaviour
         {
             _lifes--;
             _uiManager.UpdateLives(_lifes);
+
+            if (_lifes == 2)
+            {
+                _engines[1].SetActive(true);
+            }
+            else if (_lifes == 1)
+            {
+                _engines[0].SetActive(true);
+            }
+
             if (_lifes < 1)
             {
                 Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
@@ -100,6 +114,7 @@ public class Player : MonoBehaviour
 
         if (Time.time > _canFire)
         {
+            _audioSource.Play();
             _canFire = Time.time + _fireRate;
             if (_canTripleShot == true)
             {
@@ -137,11 +152,6 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(9.45f, transform.position.y, 0);
         }
-    }
-
-    public bool isAlive()
-    {
-        return !(_lifes < 1);
     }
 
     //Triple shot Powerup 
