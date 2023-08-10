@@ -11,24 +11,33 @@ public class EnemyAI : MonoBehaviour
     [SerializeField]
     private GameObject _enemyExplosionPrefab;
 
+    private UIManager _uiManager;
+
+    private GameManager _gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
         Movement();
-
+        if(_gameManager.gameOver == true)
+        {
+            Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
+            Destroy(this.gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
-        if(other.tag == "Player"){
+
+        if (other.tag == "Player")
+        {
             Player player = other.GetComponent<Player>();
 
             if (player != null)
@@ -46,10 +55,17 @@ public class EnemyAI : MonoBehaviour
             }
             Destroy(other.gameObject);
             Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
+
+            _uiManager.UpdateScore();
+
             Destroy(this.gameObject);
 
         }
-        
+
+
+
+
+
     }
 
     private void Movement()

@@ -36,10 +36,31 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lifes = 3;
 
+    private UIManager _uiManager;
+
+    private GameManager _gameManager;
+
+    private SpanwManager _spanwManager;
+
     // Start is called before the first frame update
     private void Start()
     {
         transform.position = Vector3.zero;
+     
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if (_uiManager != null)
+        {
+            _uiManager.UpdateLives(_lifes);
+        }
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        _spanwManager = GameObject.Find("Spawn_Manager").GetComponent<SpanwManager>();
+
+        if(_spanwManager != null)
+        {
+            _spanwManager.StartSpawnRoutines();
+        }
     }
 
     // Update is called once per frame
@@ -50,14 +71,11 @@ public class Player : MonoBehaviour
         {
             Shoot();
         }
-
     }
-
-
 
     public void getHurt()
     {
-        if(_isShieldActive == true)
+        if (_isShieldActive == true)
         {
             _isShieldActive = false;
             _shieldGameObject.SetActive(false);
@@ -65,9 +83,12 @@ public class Player : MonoBehaviour
         else
         {
             _lifes--;
+            _uiManager.UpdateLives(_lifes);
             if (_lifes < 1)
             {
                 Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+                _gameManager.gameOver = true;
+                _uiManager.showTitleScreen();
                 Destroy(gameObject);
             }
         }
@@ -118,6 +139,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    public bool isAlive()
+    {
+        return !(_lifes < 1);
+    }
 
     //Triple shot Powerup 
     public void TripleShotPowerupOn()
