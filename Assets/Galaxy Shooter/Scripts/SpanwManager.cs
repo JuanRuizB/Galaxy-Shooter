@@ -64,7 +64,7 @@ public class SpanwManager : MonoBehaviour
         {
             int randomPowerup = Random.Range(0, 3);
             Instantiate(powerups[randomPowerup], new Vector3(Random.Range(-8.5f, 8.5f), 7, 0), Quaternion.identity);
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(5f);
         }
 
     }
