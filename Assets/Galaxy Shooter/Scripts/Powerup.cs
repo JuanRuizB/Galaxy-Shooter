@@ -9,6 +9,16 @@ public class Powerup : MonoBehaviour
 
     [SerializeField] private int _powerupID; // 0 = triple, 1 = speed, 2 = shield;
 
+    [SerializeField]
+    private AudioClip _Clip;
+
+    private GameManager _gameManager;
+
+    private void Start()
+    {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -17,6 +27,11 @@ public class Powerup : MonoBehaviour
         if (transform.position.y < -7)
         {
             Destroy(gameObject);
+        }
+
+        if (_gameManager.gameOver == true)
+        {
+            Destroy(this.gameObject);
         }
 
     }
@@ -29,6 +44,7 @@ public class Powerup : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
+                AudioSource.PlayClipAtPoint(_Clip, Camera.main.transform.position, 1f);
                 //enable triple shot 
                 if (_powerupID == 0)
                 {
